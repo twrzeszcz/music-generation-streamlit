@@ -116,6 +116,7 @@ def gen_midi_tokens(pred, path_to_save):
 
     midi_stream = stream.Stream(output_notes)
     midi_stream.write('midi', fp=path_to_save + '.mid')
+    midi_stream.show('midi')
 
 
 def gen_midi_separate(pred, path_to_save):
