@@ -173,7 +173,7 @@ def main_section():
         model_combined = load_token_model()
         n_starting_points = st.sidebar.slider('Choose number of random starting points', 1, 20)
         n_steps = st.sidebar.slider('Choose number of generated steps', 1, 200)
-        temperature_token = st.sidebar.slider('Choose temperature', 0.1, 2.0, 1.0, key=1)
+        temperature_token = st.sidebar.slider('Choose temperature', 0.1, 2.0, 1.0)
         path_to_save = st.sidebar.text_input('Select path to save in format drive:\\***\***\\filename')
         if st.sidebar.button('Generate music'):
             pred = gen_pred(n_starting_points, n_steps, temperature_token, model=model_combined)
@@ -186,9 +186,9 @@ def main_section():
         models = load_separate_model()
         n_starting_points = st.sidebar.slider('Choose number of random starting points', 1, 20)
         n_steps = st.sidebar.slider('Choose number of generated steps', 1, 200)
-        temperature_note = st.sidebar.slider('Choose temperature note', 0.1, 2.0, 1.0, key=2)
-        temperature_duration = st.sidebar.slider('Choose temperature duration', 0.1, 2.0, 1.0, key=3)
-        temperature_offset = st.sidebar.slider('Choose temperature offset', 0.1, 2.0, 1.0, key=4)
+        temperature_note = st.sidebar.slider('Choose temperature note', 0.1, 2.0, 1.0)
+        temperature_duration = st.sidebar.slider('Choose temperature duration', 0.1, 2.0, 1.0)
+        temperature_offset = st.sidebar.slider('Choose temperature offset', 0.1, 2.0, 1.0)
         path_to_save = st.sidebar.text_input('Select path to save in format drive:\\***\***\\filename')
         if st.sidebar.button('Generate music'):
             pred = gen_pred_separate(n_starting_points, n_steps, temperature_note, temperature_duration, temperature_offset, models=models)
