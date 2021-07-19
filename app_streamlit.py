@@ -6,6 +6,9 @@ import pickle
 import gc
 from fractions import Fraction
 from music21 import *
+import io
+import pretty_midi
+from scipy.io import wavfile
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
@@ -144,7 +147,9 @@ def gen_midi_tokens(pred, path_to_save):
             output_notes.append(new_note)
 
     midi_stream = stream.Stream(output_notes)
-    midi_stream.write('midi', fp=path_to_save + '.mid')
+    filepath = midi_stream.write('midi', fp=path_to_save + '.mid')
+
+    return filepath
 
 def gen_midi_separate(pred, path_to_save):
     pred_notes, pred_dur, pred_off = pred
@@ -207,7 +212,20 @@ def main_section():
         path_to_save = st.sidebar.text_input('Select path to save in format drive:\\***\***\\filename')
         if st.sidebar.button('Generate music'):
             pred = gen_pred_tokens(n_starting_points, n_steps, temperature_token, model=model_combined)
-            gen_midi_tokens(pred, path_to_save)
+            filepath = gen_midi_tokens(pred, path_to_save)
+
+            with st.spinner(f"Transcribing to FluidSynth"):
+                midi_data = pretty_midi.PrettyMIDI(filepath)
+                audio_data = midi_data.fluidsynth()
+                audio_data = np.int16(
+                    audio_data / np.max(np.abs(audio_data)) * 32767 * 0.9
+                )
+
+                virtualfile = io.BytesIO()
+                wavfile.write(virtualfile, 44100, audio_data)
+
+            st.audio(virtualfile)
+
             st.success('Successfully generated and saved')
             del model_combined
             gc.collect()
