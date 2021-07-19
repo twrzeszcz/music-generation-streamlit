@@ -114,7 +114,7 @@ def gen_pred_full(n_starting_points, n_steps, temperature_note, temperature_dura
     return sample_notes_mapped, sample_dur_mapped, sample_off_mapped
 
 
-def gen_midi_tokens(pred, path_to_save):
+def gen_midi_tokens(pred):
     offset = Fraction(0.0)
     output_notes = []
     for pattern in pred:
@@ -125,7 +125,7 @@ def gen_midi_tokens(pred, path_to_save):
             notes = []
             for current_note in notes_in_chord:
                 new_note = note.Note(int(current_note))
-                new_note.storedInstrument = instrument.Violin()
+                new_note.storedInstrument = instrument.Piano()
                 notes.append(new_note)
             new_chord = chord.Chord(notes)
             new_chord.offset = offset
@@ -135,19 +135,19 @@ def gen_midi_tokens(pred, path_to_save):
             offset += Fraction(pattern_split[2])
             new_note = note.Rest(pattern_split[0])
             new_note.offset = offset
-            new_note.storedInstrument = instrument.Violin()
+            new_note.storedInstrument = instrument.Piano()
             new_note.duration = duration.Duration(Fraction(pattern_split[1]))
             output_notes.append(new_note)
         else:
             offset += Fraction(pattern_split[2])
             new_note = note.Note(pattern_split[0])
             new_note.offset = offset
-            new_note.storedInstrument = instrument.Violin()
+            new_note.storedInstrument = instrument.Piano()
             new_note.duration = duration.Duration(Fraction(pattern_split[1]))
             output_notes.append(new_note)
 
     midi_stream = stream.Stream(output_notes)
-    filepath = midi_stream.write('midi', fp=path_to_save + '.mid')
+    filepath = midi_stream.write('midi')
 
     return filepath
 
@@ -209,10 +209,9 @@ def main_section():
         n_starting_points = st.sidebar.slider('Choose number of random starting points', 1, 20)
         n_steps = st.sidebar.slider('Choose number of generated steps', 1, 200)
         temperature_token = st.sidebar.slider('Choose temperature', 0.1, 2.0, 1.0)
-        path_to_save = st.sidebar.text_input('Select path to save in format drive:\\***\***\\filename')
         if st.sidebar.button('Generate music'):
             pred = gen_pred_tokens(n_starting_points, n_steps, temperature_token, model=model_combined)
-            filepath = gen_midi_tokens(pred, path_to_save)
+            filepath = gen_midi_tokens(pred)
 
             with st.spinner(f"Transcribing to FluidSynth"):
                 midi_data = pretty_midi.PrettyMIDI(filepath)
@@ -220,13 +219,12 @@ def main_section():
                 audio_data = np.int16(
                     audio_data / np.max(np.abs(audio_data)) * 32767 * 0.9
                 )
-
                 virtualfile = io.BytesIO()
                 wavfile.write(virtualfile, 44100, audio_data)
 
             st.audio(virtualfile)
 
-            st.success('Successfully generated and saved')
+            st.success('Successfully generated')
             del model_combined
             gc.collect()
 
