@@ -125,7 +125,7 @@ def gen_midi_tokens(pred, path_to_save):
             notes = []
             for current_note in notes_in_chord:
                 new_note = note.Note(int(current_note))
-                new_note.storedInstrument = instrument.Piano()
+                new_note.storedInstrument = instrument.Violin()
                 notes.append(new_note)
             new_chord = chord.Chord(notes)
             new_chord.offset = offset
@@ -135,14 +135,14 @@ def gen_midi_tokens(pred, path_to_save):
             offset += Fraction(pattern_split[2])
             new_note = note.Rest(pattern_split[0])
             new_note.offset = offset
-            new_note.storedInstrument = instrument.Piano()
+            new_note.storedInstrument = instrument.Violin()
             new_note.duration = duration.Duration(Fraction(pattern_split[1]))
             output_notes.append(new_note)
         else:
             offset += Fraction(pattern_split[2])
             new_note = note.Note(pattern_split[0])
             new_note.offset = offset
-            new_note.storedInstrument = instrument.Piano()
+            new_note.storedInstrument = instrument.Violin()
             new_note.duration = duration.Duration(Fraction(pattern_split[1]))
             output_notes.append(new_note)
 
