@@ -147,7 +147,7 @@ def gen_midi_tokens(pred):
             output_notes.append(new_note)
 
     midi_stream = stream.Stream(output_notes)
-    filepath = midi_stream.write('midi')
+    filepath = midi_stream.write('midi', fp='temp.mid')
 
     return filepath
 
