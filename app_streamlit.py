@@ -14,19 +14,19 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 @st.cache(allow_output_mutation=True)
 def load_token_model():
-    model_combined = keras.models.load_model('model/combined_full_gen.h5')
+    model_combined = keras.models.load_model('models/combined_full_gen.h5')
     return model_combined
 
 @st.cache(allow_output_mutation=True)
 def load_separate_model():
-    notes_gen = keras.models.load_model('model/notes_gen.h5')
-    durations_gen = keras.models.load_model('model/durations_gen.h5')
-    offsets_gen = keras.models.load_model('model/offsets_gen.h5')
+    notes_gen = keras.models.load_model('models/notes_gen.h5')
+    durations_gen = keras.models.load_model('models/durations_gen.h5')
+    offsets_gen = keras.models.load_model('models/offsets_gen.h5')
     return (notes_gen, durations_gen, offsets_gen)
 
 @st.cache(allow_output_mutation=True)
 def load_model_full():
-    model_full = keras.models.load_model('model/model_full.h5')
+    model_full = keras.models.load_model('models/model_full.h5')
     return model_full
 
 
