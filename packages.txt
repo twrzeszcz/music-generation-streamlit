@@ -1,1 +1,2 @@
 fluidsynth
+libsndfile1-dev
